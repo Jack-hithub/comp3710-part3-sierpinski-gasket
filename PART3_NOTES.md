@@ -131,3 +131,24 @@ Every foreground point has two non-overlapping binary addresses, `c` and
 difference. Blue points use more bits from `row-c`, red points use more bits
 from `c`, and pale points are balanced. This adds information about the binary
 construction instead of applying arbitrary decorative colours.
+
+## 9. Local CPU and MPS benchmark
+
+The benchmark measures both the Boolean mask and centred raster construction.
+For every device and size it performs three discarded warm-up runs, followed
+by nine measured runs. Device synchronisation happens immediately before and
+after each timed operation. The analysis uses the median as its main summary
+because it is less sensitive to occasional system activity than the mean.
+
+On the tested Apple M3 MacBook Air, CPU was faster for every tested size. This
+does not mean the PyTorch parallel implementation is incorrect. The operation
+uses inexpensive integer comparisons, bitwise operations, and indexing, so
+MPS kernel-launch overhead can outweigh parallel execution for these sizes.
+The difference becomes much smaller for larger grids.
+
+The throughput number is `rows^2 / median time`, because the broadcast test
+evaluates an `N x N` candidate-address grid. It is not the number of final
+foreground points per second.
+
+These measurements describe this Mac and software version only. CUDA results
+on Colab must be recorded separately rather than inferred from MPS.

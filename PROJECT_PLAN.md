@@ -26,7 +26,7 @@ verification, and experiment notes show an understandable development process.
 
 ## Stage 3 - substantial analysis
 
-- [ ] Benchmark several resolutions on available devices.
+- [x] Benchmark several resolutions on CPU and Apple MPS.
 - [x] Estimate the box-counting dimension.
 - [x] Compare the estimate with `log(3) / log(2)`.
 - [x] Add labelled binary and address-colour visualisations.

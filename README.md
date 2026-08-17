@@ -71,6 +71,16 @@ python src/analyse_gasket.py --rows 1024 --device auto
 
 This writes a three-panel figure and the measured box counts to `outputs/`.
 
+Run the repeatable local benchmark with:
+
+```bash
+python tests/verify_benchmark.py
+python src/benchmark_gasket.py --devices available --warmups 3 --repeats 9
+```
+
+The benchmark saves every run to CSV and plots median time and candidate-grid
+throughput. Warm-up runs are excluded from the reported statistics.
+
 ## AI documentation ownership
 
 The student will maintain and organise the course-required AI-use record. The
@@ -98,3 +108,12 @@ counts from 59,049 down to 9. The fitted box-counting dimension was
 `1.584962501`, agreeing with `log(3) / log(2)` to floating-point precision,
 with `R^2 = 1.0`. The analysis figure includes the binary view, an
 address-balance colour view, and the fitted log-log line.
+
+## Local benchmark result
+
+On the Apple M3 MacBook Air, CPU was faster than MPS at all tested sizes from
+256 through 4,096 rows. At 4,096 rows the median times were 15.439 ms on CPU
+and 17.746 ms on MPS, so the gap narrowed considerably at the largest size.
+This is a valid result: simple integer operations and kernel-launch overhead do
+not guarantee that a GPU wins. Complete methods and values are recorded in
+`BENCHMARK_RESULTS.md`; CUDA remains a separate Colab experiment.
