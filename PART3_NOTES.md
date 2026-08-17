@@ -89,3 +89,45 @@ startup and compilation overhead. A single printed time is useful diagnostic
 information but not a fair benchmark. The analysis stage will use warm-up
 runs, synchronisation, repeated trials, and summary statistics.
 
+## 7. Box-counting dimension
+
+Box counting covers the foreground pixels with square boxes. If a box has
+side length `s`, the program counts how many such boxes contain at least one
+gasket point. It then fits:
+
+```text
+log(number of occupied boxes) = D * log(image width / s) + constant
+```
+
+The fitted slope `D` estimates the fractal dimension.
+
+For an image with `N = 2^n` rows and aligned boxes of size `2^k`, the gasket
+contains exactly `3^(n-k)` occupied boxes. Every factor-of-two decrease in box
+width reveals three self-similar copies. Therefore:
+
+```text
+D = log(3) / log(2) = 1.5849625007...
+```
+
+The 1,024-row experiment measured the following sequence:
+
+```text
+box size:        1      2     4    8   16  32  64  128  256
+occupied:    59049  19683  6561 2187  729 243  81   27    9
+```
+
+The fitted value was `1.584962501` with `R^2 = 1.0`. This exact alignment is
+expected for this deterministic gasket and these power-of-two scales; it is
+not evidence that all empirical fractal-dimension estimates will be exact.
+
+The analysis uses the right-triangular Pascal mask so boxes align naturally
+with the binary construction. The centred display is a shear and scale of the
+same set and does not change its theoretical dimension.
+
+## 8. Meaning of the address colours
+
+Every foreground point has two non-overlapping binary addresses, `c` and
+`row-c`. The colour view counts the 1-bits in each address and plots their
+difference. Blue points use more bits from `row-c`, red points use more bits
+from `c`, and pale points are balanced. This adds information about the binary
+construction instead of applying arbitrary decorative colours.

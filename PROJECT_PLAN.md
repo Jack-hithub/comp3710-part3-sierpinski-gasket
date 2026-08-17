@@ -27,9 +27,9 @@ verification, and experiment notes show an understandable development process.
 ## Stage 3 - substantial analysis
 
 - [ ] Benchmark several resolutions on available devices.
-- [ ] Estimate the box-counting dimension.
-- [ ] Compare the estimate with `log(3) / log(2)`.
-- [ ] Add labelled visualisations that reveal construction depth or scale.
+- [x] Estimate the box-counting dimension.
+- [x] Compare the estimate with `log(3) / log(2)`.
+- [x] Add labelled binary and address-colour visualisations.
 
 ## Stage 4 - CUDA and submission evidence
 

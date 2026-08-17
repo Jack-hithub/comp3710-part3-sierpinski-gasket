@@ -62,6 +62,15 @@ python src/torch_gasket.py --rows 256 --device auto
 calculation on the selected device and transfers only the finished raster to
 CPU for Matplotlib.
 
+Run the dimension and colour analysis with:
+
+```bash
+python tests/verify_analysis.py
+python src/analyse_gasket.py --rows 1024 --device auto
+```
+
+This writes a three-panel figure and the measured box counts to `outputs/`.
+
 ## AI documentation ownership
 
 The student will maintain and organise the course-required AI-use record. The
@@ -81,3 +90,11 @@ reference. For 256 (`2^8`) rows, both contain 6,561 (`3^8`) points in a
 `256 x 511` centred raster. The CPU and MPS figures were visually inspected.
 The printed time from a single command includes first-use overhead and is not
 treated as a benchmark; repeated warm-up experiments are a later stage.
+
+## Dimension-analysis result
+
+For a 1,024-row gasket, power-of-two box sizes from 1 through 256 produced
+counts from 59,049 down to 9. The fitted box-counting dimension was
+`1.584962501`, agreeing with `log(3) / log(2)` to floating-point precision,
+with `R^2 = 1.0`. The analysis figure includes the binary view, an
+address-balance colour view, and the fitted log-log line.
