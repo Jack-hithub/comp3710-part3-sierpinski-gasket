@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+
+# Generated evidence is recreated by the scripts. Keep the directory itself.
+outputs/*
+!outputs/.gitkeep
+
