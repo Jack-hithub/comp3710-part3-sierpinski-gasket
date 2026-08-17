@@ -60,3 +60,35 @@ student can verify against the code and sources.
 - Review the small reference algorithm and its checks before the PyTorch/GPU
   implementation begins.
 
+## 2026-08-18 - Independent reference stage
+
+### AI assistance and output
+
+- Restated the textbook's Pascal-triangle parity condition in original NumPy
+  code rather than copying its BASIC program.
+- Kept the reference independent of PyTorch so it can later detect errors in
+  the GPU implementation.
+- Added a centred raster mapping solely for display; this mapping does not
+  change which Pascal entries are odd.
+- Added exact-integer checks using `math.comb`, known first rows, row symmetry,
+  the `3^n` count for the first `2^n` rows, and preservation of points during
+  raster mapping.
+
+### Validation and observed output
+
+- Python compilation completed successfully.
+- All independent reference checks passed for the tested sizes.
+- For 128 rows, the program found 2,187 odd entries, agreeing with
+  `3^7 = 2,187`, and produced a `128 x 255` raster.
+- `outputs/reference_gasket.png` was visually inspected. It has a centred
+  triangular outline and the expected recursively repeated triangular gaps.
+- Matplotlib reported that the managed execution environment could not write
+  to its normal font cache. It used a temporary cache; this did not affect the
+  calculation or saved image.
+
+### Review boundary
+
+- No PyTorch conversion, GPU benchmark, dimension estimator, or final colour
+  design was added in this stage.
+- The student should first be able to explain the reference condition
+  `column & (row - column) == 0` at a high level.

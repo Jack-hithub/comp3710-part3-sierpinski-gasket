@@ -43,8 +43,15 @@ To recreate it later:
 conda env create -f environment.yml
 ```
 
-Commands for each completed stage will be added only after they have been
-verified.
+Run the completed reference stage with:
+
+```bash
+python tests/verify_reference.py
+python src/reference_gasket.py --rows 128
+```
+
+The first command compares the binary-address result with exact binomial
+coefficients. The second writes `outputs/reference_gasket.png`.
 
 ## Academic-integrity process
 
@@ -52,3 +59,8 @@ AI assistance is recorded in `AI_USAGE_LOG.md`. Each entry distinguishes the
 user prompt, AI contribution, review decisions, corrections, and validation.
 The code is not treated as correct merely because it runs.
 
+## Reference-stage result
+
+For 128 (`2^7`) rows, the reference contains 2,187 (`3^7`) odd Pascal
+entries. Its centred raster has shape `128 x 255`. The generated figure has
+been visually reviewed and shows the expected recursive triangular gaps.

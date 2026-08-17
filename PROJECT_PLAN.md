@@ -12,10 +12,10 @@ log show an understandable development process.
 
 ## Stage 1 - independent reference
 
-- [ ] Implement Pascal-triangle parity with NumPy/Python.
-- [ ] Check it against exact binomial coefficients.
-- [ ] Verify symmetry and the count `3^n` in the first `2^n` rows.
-- [ ] Inspect a small reference image.
+- [x] Implement Pascal-triangle parity with NumPy/Python.
+- [x] Check it against exact binomial coefficients.
+- [x] Verify symmetry and the count `3^n` in the first `2^n` rows.
+- [x] Inspect a small reference image.
 
 ## Stage 2 - reviewed PyTorch implementation
 
@@ -37,4 +37,3 @@ log show an understandable development process.
 - [ ] Save environment information, logs, timings, and figures.
 - [ ] Review every retained output.
 - [ ] Connect and push to GitHub only after student approval.
-
