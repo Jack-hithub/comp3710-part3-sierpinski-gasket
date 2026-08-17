@@ -26,7 +26,7 @@ does not reuse the earlier Sierpinski carpet proposal.
 5. A box-counting estimate compared with the theoretical dimension
    `log(3) / log(2)`.
 6. More than one visualisation, with parameters and colours explained.
-7. A complete AI-use and revision log.
+7. Course-required AI-use documentation maintained separately by the student.
 
 ## Local environment
 
@@ -53,11 +53,11 @@ python src/reference_gasket.py --rows 128
 The first command compares the binary-address result with exact binomial
 coefficients. The second writes `outputs/reference_gasket.png`.
 
-## Academic-integrity process
+## AI documentation ownership
 
-AI assistance is recorded in `AI_USAGE_LOG.md`. Each entry distinguishes the
-user prompt, AI contribution, review decisions, corrections, and validation.
-The code is not treated as correct merely because it runs.
+The student will maintain and organise the course-required AI-use record. The
+project automation will not create or update that record unless the student
+explicitly requests it later.
 
 ## Reference-stage result
 
