@@ -8,10 +8,11 @@ does not reuse the earlier Sierpinski carpet proposal.
 
 - Fractal choice: confirmed from a textbook section explicitly suggested by
   the lab sheet.
-- Development stage: independent reference and reviewed PyTorch core complete.
+- Development stage: local reference, PyTorch core, dimension analysis, and
+  CPU/MPS benchmark complete.
 - Remote repository: connected to the student-created GitHub repository.
-- Analysis, repeated benchmarks, final visualisations, and CUDA evidence are
-  still separate future stages.
+- The staged Colab runner is prepared; the actual CUDA run and downloaded
+  evidence are still pending.
 
 ## Planned evidence
 
@@ -117,3 +118,16 @@ and 17.746 ms on MPS, so the gap narrowed considerably at the largest size.
 This is a valid result: simple integer operations and kernel-launch overhead do
 not guarantee that a GPU wins. Complete methods and values are recorded in
 `BENCHMARK_RESULTS.md`; CUDA remains a separate Colab experiment.
+
+## Colab CUDA evidence
+
+Build the reviewed-code upload bundle with:
+
+```bash
+./scripts/build_colab_bundle.sh
+```
+
+Then follow `COLAB_PART3.md` and run `COMP3710_Part3_Colab.ipynb` one cell at a
+time with a GPU runtime. The notebook reruns all checks, generates CUDA figures,
+compares Colab CPU/CUDA with warm-ups and repeated trials, and downloads a
+single evidence ZIP.

@@ -4,6 +4,7 @@ __pycache__/
 .ipynb_checkpoints/
 .pytest_cache/
 .mypy_cache/
+dist/
 
 # Generated evidence is recreated by the scripts. Keep the directory itself.
 outputs/*
