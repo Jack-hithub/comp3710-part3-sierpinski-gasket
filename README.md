@@ -8,12 +8,10 @@ does not reuse the earlier Sierpinski carpet proposal.
 
 - Fractal choice: confirmed from a textbook section explicitly suggested by
   the lab sheet.
-- Development stage: project preparation and independent reference method.
-- Remote repository: none. GitHub will only be connected after the student
-  creates or approves the destination repository.
-- Final PyTorch implementation: deliberately not started yet. The project is
-  being built and reviewed in small commits so the learning process remains
-  visible.
+- Development stage: independent reference and reviewed PyTorch core complete.
+- Remote repository: connected to the student-created GitHub repository.
+- Analysis, repeated benchmarks, final visualisations, and CUDA evidence are
+  still separate future stages.
 
 ## Planned evidence
 
@@ -53,6 +51,17 @@ python src/reference_gasket.py --rows 128
 The first command compares the binary-address result with exact binomial
 coefficients. The second writes `outputs/reference_gasket.png`.
 
+Run the reviewed PyTorch stage with:
+
+```bash
+python tests/verify_torch_gasket.py
+python src/torch_gasket.py --rows 256 --device auto
+```
+
+`--device` accepts `auto`, `cpu`, `mps`, or `cuda`. The program keeps the
+calculation on the selected device and transfers only the finished raster to
+CPU for Matplotlib.
+
 ## AI documentation ownership
 
 The student will maintain and organise the course-required AI-use record. The
@@ -64,3 +73,11 @@ explicitly requests it later.
 For 128 (`2^7`) rows, the reference contains 2,187 (`3^7`) odd Pascal
 entries. Its centred raster has shape `128 x 255`. The generated figure has
 been visually reviewed and shows the expected recursive triangular gaps.
+
+## PyTorch-stage result
+
+The CPU and Apple MPS tensors both agree element-for-element with the NumPy
+reference. For 256 (`2^8`) rows, both contain 6,561 (`3^8`) points in a
+`256 x 511` centred raster. The CPU and MPS figures were visually inspected.
+The printed time from a single command includes first-use overhead and is not
+treated as a benchmark; repeated warm-up experiments are a later stage.

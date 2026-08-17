@@ -1,14 +1,14 @@
 # Part 3 staged plan
 
-The stages below are intentionally separated so that the Git history and AI
-log show an understandable development process.
+The stages below are intentionally separated so that the Git history,
+verification, and experiment notes show an understandable development process.
 
 ## Stage 0 - selection and preparation
 
 - [x] Replace the unapproved Sierpinski carpet proposal.
 - [x] Select the Sierpinski gasket from textbook Section 2.10.
 - [x] Confirm the existing `comp3710` environment.
-- [x] Create a clean local repository with no GitHub remote.
+- [x] Create a clean local repository and connect the student-approved remote.
 
 ## Stage 1 - independent reference
 
@@ -19,10 +19,10 @@ log show an understandable development process.
 
 ## Stage 2 - reviewed PyTorch implementation
 
-- [ ] Express the binary-address test with PyTorch integer tensors.
-- [ ] Add explicit CPU, MPS, and CUDA device selection.
-- [ ] Compare the PyTorch mask with the independent reference.
-- [ ] Explain tensor shapes, bitwise operations, and device movement.
+- [x] Express the binary-address test with PyTorch integer tensors.
+- [x] Add explicit CPU, MPS, and CUDA device selection.
+- [x] Compare the PyTorch mask with the independent reference.
+- [x] Explain tensor shapes, bitwise operations, and device movement.
 
 ## Stage 3 - substantial analysis
 
@@ -36,4 +36,4 @@ log show an understandable development process.
 - [ ] Run the reviewed code in Google Colab with CUDA.
 - [ ] Save environment information, logs, timings, and figures.
 - [ ] Review every retained output.
-- [ ] Connect and push to GitHub only after student approval.
+- [x] Connect the GitHub remote and push initial commits after student approval.
