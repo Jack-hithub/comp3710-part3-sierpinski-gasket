@@ -1,5 +1,9 @@
 # AI Prompts
 
+This is the complete development record. It intentionally retains prompts
+about the NumPy reference and timing experiment even though those optional
+artifacts were later removed from the final demonstration repository.
+
 ## Prompt 1 - Understanding the requirements
 
 I understand that Part 3 requires a fractal implemented with PyTorch,

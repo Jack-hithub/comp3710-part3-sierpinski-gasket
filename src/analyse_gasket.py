@@ -10,8 +10,12 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from reference_gasket import centred_raster
-from torch_gasket import DEVICE_CHOICES, pascal_odd_mask_torch, resolve_device, synchronise
+from torch_gasket import (
+    DEVICE_CHOICES,
+    centred_raster_torch,
+    pascal_odd_mask_torch,
+    resolve_device,
+)
 
 
 def count_occupied_boxes(mask: np.ndarray, box_size: int) -> int:
@@ -41,8 +45,8 @@ def count_occupied_boxes(mask: np.ndarray, box_size: int) -> int:
 def power_of_two_box_sizes(rows: int) -> list[int]:
     """Return aligned scales from one pixel through one quarter of the image."""
 
-    if rows < 4 or rows & (rows - 1):
-        raise ValueError("rows must be a power of two and at least 4")
+    if rows < 8 or rows & (rows - 1):
+        raise ValueError("rows must be a power of two and at least 8")
     return [2**exponent for exponent in range(int(math.log2(rows)) - 1)]
 
 
@@ -112,6 +116,7 @@ def save_box_counts(
 
 def save_analysis_figure(
     mask: np.ndarray,
+    binary_raster: np.ndarray,
     box_sizes: list[int],
     counts: np.ndarray,
     estimated_dimension: float,
@@ -123,7 +128,6 @@ def save_analysis_figure(
     import matplotlib.pyplot as plt
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    binary_raster = centred_raster(mask)
     colour_raster = binary_address_colour(mask)
 
     figure, axes = plt.subplots(1, 3, figsize=(18, 5.7), constrained_layout=True)
@@ -198,14 +202,16 @@ def main() -> None:
     box_sizes = power_of_two_box_sizes(args.rows)
 
     mask_tensor = pascal_odd_mask_torch(args.rows, device)
-    synchronise(device)
+    binary_raster_tensor = centred_raster_torch(mask_tensor)
     mask = mask_tensor.cpu().numpy()
+    binary_raster = binary_raster_tensor.cpu().numpy()
     counts, estimate, r_squared = estimate_box_dimension(mask, box_sizes)
     theoretical = math.log(3) / math.log(2)
 
     save_box_counts(args.csv, box_sizes, counts)
     save_analysis_figure(
         mask,
+        binary_raster,
         box_sizes,
         counts,
         estimate,

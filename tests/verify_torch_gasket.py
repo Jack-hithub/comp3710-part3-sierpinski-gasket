@@ -1,18 +1,16 @@
-"""Compare the PyTorch gasket with the independent NumPy reference."""
+"""Checks for the submitted PyTorch gasket implementation."""
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
-import numpy as np
 import torch
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_DIR / "src"))
 
-from reference_gasket import centred_raster, pascal_odd_mask  # noqa: E402
 from torch_gasket import (  # noqa: E402
     centred_raster_torch,
     pascal_odd_mask_torch,
@@ -31,18 +29,33 @@ def verify_device_selection() -> None:
         raise AssertionError("invalid device name was accepted")
 
 
-def verify_against_reference(device: torch.device) -> None:
-    for rows in (1, 2, 3, 8, 31, 64, 128):
-        expected_mask = pascal_odd_mask(rows)
-        actual_mask = pascal_odd_mask_torch(rows, device)
-        assert actual_mask.dtype == torch.bool
-        assert actual_mask.device.type == device.type
-        assert np.array_equal(actual_mask.cpu().numpy(), expected_mask)
+def verify_small_known_pattern(device: torch.device) -> None:
+    expected_mask = torch.tensor(
+        [
+            [1, 0, 0, 0],
+            [1, 1, 0, 0],
+            [1, 0, 1, 0],
+            [1, 1, 1, 1],
+        ],
+        dtype=torch.bool,
+    )
+    expected_raster = torch.tensor(
+        [
+            [0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 1, 0, 1, 0, 0],
+            [0, 1, 0, 0, 0, 1, 0],
+            [1, 0, 1, 0, 1, 0, 1],
+        ],
+        dtype=torch.uint8,
+    )
 
-        expected_raster = centred_raster(expected_mask)
-        actual_raster = centred_raster_torch(actual_mask)
-        assert actual_raster.dtype == torch.uint8
-        assert np.array_equal(actual_raster.cpu().numpy(), expected_raster)
+    actual_mask = pascal_odd_mask_torch(4, device)
+    actual_raster = centred_raster_torch(actual_mask)
+    assert actual_mask.dtype == torch.bool
+    assert actual_mask.device.type == device.type
+    assert torch.equal(actual_mask.cpu(), expected_mask)
+    assert actual_raster.dtype == torch.uint8
+    assert torch.equal(actual_raster.cpu(), expected_raster)
 
 
 def verify_known_counts(device: torch.device) -> None:
@@ -83,15 +96,14 @@ def main() -> None:
     verify_invalid_inputs()
     devices = available_test_devices()
     for device in devices:
-        verify_against_reference(device)
+        verify_small_known_pattern(device)
         verify_known_counts(device)
         print(f"Verified device: {device.type}")
 
     print("PyTorch verification passed")
-    print("PyTorch masks and centred rasters agree with the NumPy reference")
+    print("Known Pascal rows and centred raster coordinates are correct")
     print("Boolean dtype, device placement, input checks, and 3^n counts passed")
 
 
 if __name__ == "__main__":
     main()
-

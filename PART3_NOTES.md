@@ -73,7 +73,7 @@ overhead.
 The PyTorch result is not accepted just because its picture looks plausible.
 `tests/verify_torch_gasket.py` checks:
 
-- exact equality with the independent NumPy implementation;
+- the known first four Pascal rows and their centred display positions;
 - known counts `3^n` for the first `2^n` rows;
 - Boolean mask and unsigned-byte raster dtypes;
 - preservation of the selected device;
@@ -82,14 +82,7 @@ The PyTorch result is not accepted just because its picture looks plausible.
 
 The submitted CPU implementation passes all of these checks locally.
 
-## 6. Timing caution
-
-A single printed time can be affected by Python startup, memory allocation,
-and ordinary system activity, so it is not a fair benchmark by itself. The
-benchmark therefore uses discarded warm-up runs, repeated trials, and summary
-statistics.
-
-## 7. Box-counting dimension
+## 6. Box-counting dimension
 
 Box counting covers the foreground pixels with square boxes. If a box has
 side length `s`, the program counts how many such boxes contain at least one
@@ -124,24 +117,10 @@ The analysis uses the right-triangular Pascal mask so boxes align naturally
 with the binary construction. The centred display is a shear and scale of the
 same set and does not change its theoretical dimension.
 
-## 8. Meaning of the address colours
+## 7. Meaning of the address colours
 
 Every foreground point has two non-overlapping binary addresses, `c` and
 `row-c`. The colour view counts the 1-bits in each address and plots their
 difference. Blue points use more bits from `row-c`, red points use more bits
 from `c`, and pale points are balanced. This adds information about the binary
 construction instead of applying arbitrary decorative colours.
-
-## 9. Local CPU benchmark
-
-The benchmark measures both the Boolean mask and centred raster construction.
-For every size it performs three discarded warm-up runs, followed by nine
-measured CPU runs. The analysis uses the median as its main summary because it
-is less sensitive to occasional system activity than the mean.
-
-The throughput number is `rows^2 / median time`, because the broadcast test
-evaluates an `N x N` candidate-address grid. It is not the number of final
-foreground points per second.
-
-These measurements describe this Mac and software version only. They support
-the local demonstration and do not make claims about other hardware.

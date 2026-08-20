@@ -16,9 +16,9 @@ One, Introduction to Fractals and Chaos*, Section 2.10, "Sierpinski Gasket by
 Binary Addresses," pp. 148-150.
 
 The section relates the gasket to the parity pattern in Pascal's triangle and
-describes a binary-coordinate test. Our reference implementation will restate
-that mathematical condition in original Python code rather than copying the
-book's BASIC listing.
+describes a binary-coordinate test. The PyTorch implementation restates that
+mathematical condition in original code rather than copying the book's BASIC
+listing.
 
 Local source:
 `/Users/baoxuwang/Downloads/978-1-4757-2172-0.pdf`, PDF pages 160-162.
@@ -26,7 +26,6 @@ Local source:
 ## Source distinction
 
 - The fractal choice and mathematical identity come from the sources above.
-- Project structure, validation checks, PyTorch conversion, benchmarks,
-  dimension analysis, and visualisations are student/AI-assisted work and are
-  documented as they are developed.
-
+- Project structure, validation checks, PyTorch conversion, dimension analysis,
+  and visualisations are student/AI-assisted work and are documented as they
+  are developed.

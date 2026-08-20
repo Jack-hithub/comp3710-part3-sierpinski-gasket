@@ -18,13 +18,13 @@ from analyse_gasket import (  # noqa: E402
     estimate_box_dimension,
     power_of_two_box_sizes,
 )
-from reference_gasket import pascal_odd_mask  # noqa: E402
+from torch_gasket import pascal_odd_mask_torch  # noqa: E402
 
 
 def verify_aligned_box_counts() -> None:
     exponent = 8
     rows = 2**exponent
-    mask = pascal_odd_mask(rows)
+    mask = pascal_odd_mask_torch(rows, device="cpu").numpy()
     box_sizes = power_of_two_box_sizes(rows)
     counts, estimate, r_squared = estimate_box_dimension(mask, box_sizes)
 
@@ -46,7 +46,7 @@ def verify_padding_for_arbitrary_shape() -> None:
 
 def verify_address_colour() -> None:
     rows = 64
-    mask = pascal_odd_mask(rows)
+    mask = pascal_odd_mask_torch(rows, device="cpu").numpy()
     colour = binary_address_colour(mask)
     assert colour.shape == (rows, 2 * rows - 1)
     assert int(np.isfinite(colour).sum()) == int(mask.sum())
@@ -56,7 +56,7 @@ def verify_address_colour() -> None:
 
 
 def verify_invalid_inputs() -> None:
-    for rows in (0, 3, 6):
+    for rows in (0, 3, 4, 6):
         try:
             power_of_two_box_sizes(rows)
         except ValueError:
@@ -78,4 +78,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import time
 from pathlib import Path
 
 import numpy as np
@@ -32,15 +31,6 @@ def resolve_device(requested: str = "auto") -> torch.device:
     if requested == "mps" and not torch.backends.mps.is_available():
         raise RuntimeError("MPS was requested but is not available")
     return torch.device(requested)
-
-
-def synchronise(device: torch.device) -> None:
-    """Wait for queued accelerator work before recording a timing."""
-
-    if device.type == "cuda":
-        torch.cuda.synchronize(device)
-    elif device.type == "mps":
-        torch.mps.synchronize()
 
 
 def pascal_odd_mask_torch(rows: int, device: torch.device) -> torch.Tensor:
@@ -80,23 +70,17 @@ def centred_raster_torch(mask: torch.Tensor) -> torch.Tensor:
     return raster
 
 
-def generate_gasket(rows: int, device: torch.device) -> tuple[torch.Tensor, float]:
-    """Generate a centred raster and return its elapsed device time in ms."""
+def generate_gasket(rows: int, device: torch.device) -> torch.Tensor:
+    """Generate and return a centred gasket raster on ``device``."""
 
-    synchronise(device)
-    start = time.perf_counter()
     mask = pascal_odd_mask_torch(rows, device)
-    raster = centred_raster_torch(mask)
-    synchronise(device)
-    elapsed_ms = (time.perf_counter() - start) * 1_000
-    return raster, elapsed_ms
+    return centred_raster_torch(mask)
 
 
 def save_figure(
     raster: torch.Tensor,
     output_path: Path,
     device: torch.device,
-    elapsed_ms: float,
 ) -> None:
     """Transfer one finished raster to CPU and save a labelled figure."""
 
@@ -113,10 +97,7 @@ def save_figure(
         origin="upper",
         aspect="equal",
     )
-    axis.set_title(
-        f"PyTorch Sierpinski gasket - device={device.type}, "
-        f"generation={elapsed_ms:.3f} ms"
-    )
+    axis.set_title(f"PyTorch Sierpinski gasket - device={device.type}")
     axis.set_xlabel("centred horizontal pixel")
     axis.set_ylabel("Pascal row")
     axis.set_xticks([])
@@ -141,19 +122,17 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     device = resolve_device(args.device)
-    raster, elapsed_ms = generate_gasket(args.rows, device)
+    raster = generate_gasket(args.rows, device)
     point_count = int(raster.sum().item())
-    save_figure(raster, args.output, device, elapsed_ms)
+    save_figure(raster, args.output, device)
 
     print(f"PyTorch: {torch.__version__}")
     print(f"Device: {device.type}")
     print(f"Rows: {args.rows}")
     print(f"Odd Pascal entries: {point_count}")
     print(f"Raster shape: {tuple(raster.shape)}")
-    print(f"Generation time: {elapsed_ms:.3f} ms")
     print(f"Saved: {args.output.resolve()}")
 
 
 if __name__ == "__main__":
     main()
-

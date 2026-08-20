@@ -8,25 +8,22 @@ does not reuse the earlier Sierpinski carpet proposal.
 
 - Fractal choice: confirmed from a textbook section explicitly suggested by
   the lab sheet.
-- Development stage: reference implementation, PyTorch core, dimension
-  analysis, and repeatable local CPU benchmark complete.
+- Development stage: PyTorch core and substantial dimension/colour analysis
+  complete.
 - Remote repository: connected to the student-created GitHub repository.
 - The submitted figures and CSV files under `outputs/` were generated locally
   by the same commands documented below.
 
 ## Planned evidence
 
-1. A small NumPy/Python reference based on the parity of Pascal's triangle.
-2. Independent checks using exact binomial coefficients and known point
-   counts.
-3. A reviewed PyTorch implementation in which pixels are evaluated in
+1. A reviewed PyTorch implementation in which pixels are evaluated in
    parallel on CPU, with optional Apple MPS or NVIDIA CUDA support when those
    devices are available.
-4. Repeatable CPU timing at several image sizes.
-5. A box-counting estimate compared with the theoretical dimension
+2. Checks using known Pascal rows and the exact point counts `3^n`.
+3. A box-counting estimate compared with the theoretical dimension
    `log(3) / log(2)`.
-6. More than one visualisation, with parameters and colours explained.
-7. A staged record of the [AI prompts](AI_PROMPTS.md) used during development.
+4. More than one visualisation, with parameters and colours explained.
+5. A staged record of the [AI prompts](AI_PROMPTS.md) used during development.
 
 ## Local environment
 
@@ -42,16 +39,6 @@ To recreate it later:
 ```bash
 conda env create -f environment.yml
 ```
-
-Run the completed reference stage with:
-
-```bash
-python tests/verify_reference.py
-python src/reference_gasket.py --rows 128
-```
-
-The first command compares the binary-address result with exact binomial
-coefficients. The second writes `outputs/reference_gasket.png`.
 
 Run the reviewed PyTorch stage with:
 
@@ -73,38 +60,17 @@ python src/analyse_gasket.py --rows 1024 --device cpu
 
 This writes a three-panel figure and the measured box counts to `outputs/`.
 
-Run the repeatable local benchmark with:
-
-```bash
-python tests/verify_benchmark.py
-python src/benchmark_gasket.py \
-  --sizes 256 512 1024 2048 4096 \
-  --devices cpu \
-  --warmups 3 \
-  --repeats 9
-```
-
-The benchmark saves every run to CSV and plots median time and candidate-grid
-throughput. Warm-up runs are excluded from the reported statistics.
-
 ## AI prompts
 
 The staged prompts used during development are recorded in
 [`AI_PROMPTS.md`](AI_PROMPTS.md).
 
-## Reference-stage result
-
-For 128 (`2^7`) rows, the reference contains 2,187 (`3^7`) odd Pascal
-entries. Its centred raster has shape `128 x 255`. The generated figure has
-been visually reviewed and shows the expected recursive triangular gaps.
-
 ## PyTorch-stage result
 
-The CPU tensor agrees element-for-element with the NumPy reference. For 256
-(`2^8`) rows, it contains 6,561 (`3^8`) points in a `256 x 511` centred
-raster. The generated figure was visually inspected.
-The printed time from a single command includes first-use overhead and is not
-treated as a benchmark; repeated warm-up experiments are a later stage.
+For 256 (`2^8`) rows, the CPU tensor contains 6,561 (`3^8`) points in a
+`256 x 511` centred raster. Known Pascal rows, exact point counts, tensor
+types, device placement, and the display mapping are checked by the retained
+verification script. The generated figure was visually inspected.
 
 ## Dimension-analysis result
 
@@ -114,22 +80,10 @@ counts from 59,049 down to 9. The fitted box-counting dimension was
 with `R^2 = 1.0`. The analysis figure includes the binary view, an
 address-balance colour view, and the fitted log-log line.
 
-## Local benchmark result
-
-The submitted benchmark uses CPU at five image sizes, three discarded warm-up
-runs, and nine measured runs per size. This is sufficient for the lab because
-the main requirement is that PyTorch tensor operations perform the pixel tests
-in parallel rather than a Python loop. Complete methods and measured values are
-recorded in `BENCHMARK_RESULTS.md` and `outputs/benchmark_results.csv`.
-
 ## Demonstration outputs
 
 All figures below are committed so they remain visible during the demo. They
 can also be regenerated locally using the commands above.
-
-### Independent reference
-
-![NumPy reference Sierpinski gasket](outputs/reference_gasket.png)
 
 ### PyTorch CPU result
 
@@ -139,10 +93,5 @@ can also be regenerated locally using the commands above.
 
 ![Sierpinski gasket dimension analysis](outputs/gasket_analysis.png)
 
-### Repeatable CPU benchmark
-
-![PyTorch CPU benchmark](outputs/benchmark.png)
-
-The raw benchmark measurements and box counts are available in
-[`outputs/benchmark_results.csv`](outputs/benchmark_results.csv) and
+The measured box counts are available in
 [`outputs/box_counts.csv`](outputs/box_counts.csv).
