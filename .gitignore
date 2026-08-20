@@ -5,8 +5,14 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 dist/
+tmp/
 
-# Generated evidence is recreated by the scripts. Keep the directory itself.
+# Keep only the reviewed local evidence used in the README and demonstration.
 outputs/*
 !outputs/.gitkeep
-
+!outputs/reference_gasket.png
+!outputs/torch_gasket.png
+!outputs/gasket_analysis.png
+!outputs/benchmark.png
+!outputs/benchmark_results.csv
+!outputs/box_counts.csv

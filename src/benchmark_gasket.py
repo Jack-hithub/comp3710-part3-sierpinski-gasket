@@ -141,7 +141,7 @@ def run_benchmarks(
 def save_results_csv(output_path: Path, results: list[BenchmarkResult]) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.writer(stream)
+        writer = csv.writer(stream, lineterminator="\n")
         writer.writerow(
             [
                 "device",

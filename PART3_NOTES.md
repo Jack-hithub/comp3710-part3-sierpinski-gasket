@@ -56,16 +56,17 @@ points.
 ## 4. Device movement
 
 `torch.arange`, the broadcast comparison, the bitwise expression, and raster
-construction all run on the selected CPU, MPS, or CUDA device. Only the final
-raster moves to CPU:
+construction all run on the selected PyTorch device. The submitted demo uses
+CPU, while the code can optionally select MPS or CUDA when available. Only the
+final raster moves to CPU:
 
 ```python
 image_array = raster.cpu().numpy()
 ```
 
 That final conversion is necessary because Matplotlib expects a NumPy array.
-Moving intermediate tensors back and forth would add transfer overhead and
-would weaken the GPU experiment.
+Moving intermediate tensors between devices would add unnecessary transfer
+overhead.
 
 ## 5. How correctness is checked
 
@@ -79,15 +80,14 @@ The PyTorch result is not accepted just because its picture looks plausible.
 - invalid input handling; and
 - equality after mapping to the centred raster.
 
-Both CPU and Apple MPS passed these checks locally. NVIDIA CUDA will be checked
-later in Colab.
+The submitted CPU implementation passes all of these checks locally.
 
 ## 6. Timing caution
 
-Accelerators initialise lazily, so the first MPS or CUDA operation can include
-startup and compilation overhead. A single printed time is useful diagnostic
-information but not a fair benchmark. The analysis stage will use warm-up
-runs, synchronisation, repeated trials, and summary statistics.
+A single printed time can be affected by Python startup, memory allocation,
+and ordinary system activity, so it is not a fair benchmark by itself. The
+benchmark therefore uses discarded warm-up runs, repeated trials, and summary
+statistics.
 
 ## 7. Box-counting dimension
 
@@ -132,23 +132,16 @@ difference. Blue points use more bits from `row-c`, red points use more bits
 from `c`, and pale points are balanced. This adds information about the binary
 construction instead of applying arbitrary decorative colours.
 
-## 9. Local CPU and MPS benchmark
+## 9. Local CPU benchmark
 
 The benchmark measures both the Boolean mask and centred raster construction.
-For every device and size it performs three discarded warm-up runs, followed
-by nine measured runs. Device synchronisation happens immediately before and
-after each timed operation. The analysis uses the median as its main summary
-because it is less sensitive to occasional system activity than the mean.
-
-On the tested Apple M3 MacBook Air, CPU was faster for every tested size. This
-does not mean the PyTorch parallel implementation is incorrect. The operation
-uses inexpensive integer comparisons, bitwise operations, and indexing, so
-MPS kernel-launch overhead can outweigh parallel execution for these sizes.
-The difference becomes much smaller for larger grids.
+For every size it performs three discarded warm-up runs, followed by nine
+measured CPU runs. The analysis uses the median as its main summary because it
+is less sensitive to occasional system activity than the mean.
 
 The throughput number is `rows^2 / median time`, because the broadcast test
 evaluates an `N x N` candidate-address grid. It is not the number of final
 foreground points per second.
 
-These measurements describe this Mac and software version only. CUDA results
-on Colab must be recorded separately rather than inferred from MPS.
+These measurements describe this Mac and software version only. They support
+the local demonstration and do not make claims about other hardware.

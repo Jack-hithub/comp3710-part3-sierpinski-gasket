@@ -24,16 +24,16 @@ verification, and experiment notes show an understandable development process.
 - [x] Compare the PyTorch mask with the independent reference.
 - [x] Explain tensor shapes, bitwise operations, and device movement.
 
-## Stage 3 - substantial analysis
+## Stage 3 - substantial local analysis
 
-- [x] Benchmark several resolutions on CPU and Apple MPS.
+- [x] Benchmark several resolutions on CPU.
 - [x] Estimate the box-counting dimension.
 - [x] Compare the estimate with `log(3) / log(2)`.
 - [x] Add labelled binary and address-colour visualisations.
 
-## Stage 4 - CUDA and submission evidence
+## Stage 4 - local submission evidence
 
-- [ ] Run the reviewed code in Google Colab with CUDA.
-- [ ] Save environment information, logs, timings, and figures.
-- [ ] Review every retained output.
+- [x] Run the reviewed code locally on CPU.
+- [x] Save timings, figures, and CSV measurements.
+- [x] Review every retained output.
 - [x] Connect the GitHub remote and push initial commits after student approval.

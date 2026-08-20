@@ -105,7 +105,7 @@ def save_box_counts(
 ) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.writer(stream)
+        writer = csv.writer(stream, lineterminator="\n")
         writer.writerow(["box_size", "occupied_boxes"])
         writer.writerows(zip(box_sizes, counts.tolist()))
 
@@ -230,4 +230,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

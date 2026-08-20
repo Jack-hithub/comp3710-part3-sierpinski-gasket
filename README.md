@@ -8,11 +8,11 @@ does not reuse the earlier Sierpinski carpet proposal.
 
 - Fractal choice: confirmed from a textbook section explicitly suggested by
   the lab sheet.
-- Development stage: local reference, PyTorch core, dimension analysis, and
-  CPU/MPS benchmark complete.
+- Development stage: reference implementation, PyTorch core, dimension
+  analysis, and repeatable local CPU benchmark complete.
 - Remote repository: connected to the student-created GitHub repository.
-- The staged Colab runner is prepared; the actual CUDA run and downloaded
-  evidence are still pending.
+- The submitted figures and CSV files under `outputs/` were generated locally
+  by the same commands documented below.
 
 ## Planned evidence
 
@@ -20,8 +20,9 @@ does not reuse the earlier Sierpinski carpet proposal.
 2. Independent checks using exact binomial coefficients and known point
    counts.
 3. A reviewed PyTorch implementation in which pixels are evaluated in
-   parallel on CPU, Apple MPS, or NVIDIA CUDA.
-4. CPU/GPU timing at several image sizes.
+   parallel on CPU, with optional Apple MPS or NVIDIA CUDA support when those
+   devices are available.
+4. Repeatable CPU timing at several image sizes.
 5. A box-counting estimate compared with the theoretical dimension
    `log(3) / log(2)`.
 6. More than one visualisation, with parameters and colours explained.
@@ -56,18 +57,18 @@ Run the reviewed PyTorch stage with:
 
 ```bash
 python tests/verify_torch_gasket.py
-python src/torch_gasket.py --rows 256 --device auto
+python src/torch_gasket.py --rows 256 --device cpu
 ```
 
-`--device` accepts `auto`, `cpu`, `mps`, or `cuda`. The program keeps the
-calculation on the selected device and transfers only the finished raster to
-CPU for Matplotlib.
+`--device` accepts `auto`, `cpu`, `mps`, or `cuda`; the submitted demonstration
+uses `cpu` so it runs without a GPU. The program keeps the calculation on the
+selected device and transfers only the finished raster to CPU for Matplotlib.
 
 Run the dimension and colour analysis with:
 
 ```bash
 python tests/verify_analysis.py
-python src/analyse_gasket.py --rows 1024 --device auto
+python src/analyse_gasket.py --rows 1024 --device cpu
 ```
 
 This writes a three-panel figure and the measured box counts to `outputs/`.
@@ -76,7 +77,11 @@ Run the repeatable local benchmark with:
 
 ```bash
 python tests/verify_benchmark.py
-python src/benchmark_gasket.py --devices available --warmups 3 --repeats 9
+python src/benchmark_gasket.py \
+  --sizes 256 512 1024 2048 4096 \
+  --devices cpu \
+  --warmups 3 \
+  --repeats 9
 ```
 
 The benchmark saves every run to CSV and plots median time and candidate-grid
@@ -96,9 +101,9 @@ been visually reviewed and shows the expected recursive triangular gaps.
 
 ## PyTorch-stage result
 
-The CPU and Apple MPS tensors both agree element-for-element with the NumPy
-reference. For 256 (`2^8`) rows, both contain 6,561 (`3^8`) points in a
-`256 x 511` centred raster. The CPU and MPS figures were visually inspected.
+The CPU tensor agrees element-for-element with the NumPy reference. For 256
+(`2^8`) rows, it contains 6,561 (`3^8`) points in a `256 x 511` centred
+raster. The generated figure was visually inspected.
 The printed time from a single command includes first-use overhead and is not
 treated as a benchmark; repeated warm-up experiments are a later stage.
 
@@ -112,22 +117,33 @@ address-balance colour view, and the fitted log-log line.
 
 ## Local benchmark result
 
-On the Apple M3 MacBook Air, CPU was faster than MPS at all tested sizes from
-256 through 4,096 rows. At 4,096 rows the median times were 15.439 ms on CPU
-and 17.746 ms on MPS, so the gap narrowed considerably at the largest size.
-This is a valid result: simple integer operations and kernel-launch overhead do
-not guarantee that a GPU wins. Complete methods and values are recorded in
-`BENCHMARK_RESULTS.md`; CUDA remains a separate Colab experiment.
+The submitted benchmark uses CPU at five image sizes, three discarded warm-up
+runs, and nine measured runs per size. This is sufficient for the lab because
+the main requirement is that PyTorch tensor operations perform the pixel tests
+in parallel rather than a Python loop. Complete methods and measured values are
+recorded in `BENCHMARK_RESULTS.md` and `outputs/benchmark_results.csv`.
 
-## Colab CUDA evidence
+## Demonstration outputs
 
-Build the reviewed-code upload bundle with:
+All figures below are committed so they remain visible during the demo. They
+can also be regenerated locally using the commands above.
 
-```bash
-./scripts/build_colab_bundle.sh
-```
+### Independent reference
 
-Then follow `COLAB_PART3.md` and run `COMP3710_Part3_Colab.ipynb` one cell at a
-time with a GPU runtime. The notebook reruns all checks, generates CUDA figures,
-compares Colab CPU/CUDA with warm-ups and repeated trials, and downloads a
-single evidence ZIP.
+![NumPy reference Sierpinski gasket](outputs/reference_gasket.png)
+
+### PyTorch CPU result
+
+![PyTorch CPU Sierpinski gasket](outputs/torch_gasket.png)
+
+### Dimension and address-colour analysis
+
+![Sierpinski gasket dimension analysis](outputs/gasket_analysis.png)
+
+### Repeatable CPU benchmark
+
+![PyTorch CPU benchmark](outputs/benchmark.png)
+
+The raw benchmark measurements and box counts are available in
+[`outputs/benchmark_results.csv`](outputs/benchmark_results.csv) and
+[`outputs/box_counts.csv`](outputs/box_counts.csv).
