@@ -26,9 +26,7 @@ does not reuse the earlier Sierpinski carpet proposal.
 5. A box-counting estimate compared with the theoretical dimension
    `log(3) / log(2)`.
 6. More than one visualisation, with parameters and colours explained.
-7. A staged [AI use declaration and development record](AI_USAGE_STATEMENT.md)
-   covering prompts, AI suggestions, student decisions, modifications, and
-   verification.
+7. A staged record of the [AI prompts](AI_PROMPTS.md) used during development.
 
 ## Local environment
 
@@ -89,12 +87,10 @@ python src/benchmark_gasket.py \
 The benchmark saves every run to CSV and plots median time and candidate-grid
 throughput. Warm-up runs are excluded from the reported statistics.
 
-## AI use documentation
+## AI prompts
 
-The course-required AI declaration is available in
-[`AI_USAGE_STATEMENT.md`](AI_USAGE_STATEMENT.md). It records the staged
-interaction process, including suggestions that were modified or rejected,
-the student's decisions, and the checks used before accepting results.
+The staged prompts used during development are recorded in
+[`AI_PROMPTS.md`](AI_PROMPTS.md).
 
 ## Reference-stage result
 
